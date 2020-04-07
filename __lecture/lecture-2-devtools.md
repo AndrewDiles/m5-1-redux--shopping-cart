@@ -37,7 +37,11 @@ import reducer from './reducers';
 
 const initialState = { hi: 5 };
 
-const store = createStore(reducer, initialState);
+const store = createStore(
+  reducer, 
+  initialState,
+  enhancer
+  );
 ```
 
 ---
