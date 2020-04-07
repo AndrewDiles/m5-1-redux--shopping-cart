@@ -151,9 +151,12 @@ Our state shape:
   ]
 }
 */
+import { useSelector } from 'react-redux';
 
 const FridgeContents = () => {
-  const fridgeItems = /* TODO */
+  const fridgeItems = useSelctor((state) => {
+    return state.fridge;
+  })
 
   return (
     <div>
@@ -197,7 +200,10 @@ const App = () => {
   // We're going to watch OUR favourite movie,
   // in our BOYFRIEND's favourite genre.
   // (Terror at Jarry Park)
-  const movie = /* TODO */
+  const movie = useSelectoe((state) => {
+    
+    return state.myFavouriteMovies[state.boyfriendFavouriteGenre]
+  })
 
   return (
     <div>
@@ -226,11 +232,16 @@ Our state shape:
 const UserProfile = () => {
   // `streetAddress` should be formatted as:
   // "129 W. 81st St, Apartment 5A"
-  const streetAddress = /* TODO */
+  const streetAddress = useSelectoe((state) => {
+  return = `${state.address.line1}, ${state.address.line2}` 
+  })
+
+// use condition to make sure the second line exists and only include the coma if it does
+
 
   return (
     <div>
-      You live at {address}.
+      You live at {streetAddress}.
     </div>
   );
 };
@@ -266,8 +277,10 @@ Our state shape:
 */
 
 const OnlineUsers = () => {
-  const myStatus = /* TODO */
-  const onlineUsers = /* TODO */
+  const myStatus = useSelector((state) => state.myStatus);  //implicit return.  word return is assumed
+  const onlineUsers = useSelector((state=> {
+    return state.users.filter(user => user.online);
+  })
 
   return onlineUsers.map(user => (
     <div key={user.name}>
@@ -362,12 +375,14 @@ Wire in the action and dispatch it.
 ---
 
 ```js
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { pokeUser } from '../actions';
 
 const OnlineUsers = () => {
   // TODO: Something missing here...
+  // added:
+  const dispatch = useDispatch();
 
   const onlineUsers = useSelector((state) => {
     return state.users.filter((user) => user.online);
@@ -375,10 +390,20 @@ const OnlineUsers = () => {
 
   return onlineUsers.map((user) => (
     <div key={user.name}>
-      <button onClick={/* TODO */}>Message {user.name}</button>
+      <button 
+        onClick={() => dispatch(pokeUser(user))}
+      >Message {user.name}</button>
     </div>
   ));
 };
+
+//actions.js file
+const pokeUser = user => {
+  return {
+    type: 'POKE_USER',
+    user,
+  }
+})
 ```
 
 ---
@@ -395,7 +420,7 @@ const FridgeForm = () => {
   return (
     <form
       onSubmit={() => {
-        /* TODO */
+        dispatch(addItemToFridge(value));
       }}
     >
       <input type='text' onChange={(ev) => setValue(ev.target.value)} />
@@ -419,7 +444,7 @@ const Modal = () => {
   React.useEffect(() => {
     const handleKeydown = (ev) => {
       // TODO: Close modal when 'Escape' is pressed
-      // (Hint: use ev.key)
+      if (ev.key === 'ESCAPE') dispatch(dismissModal());
     };
 
     window.addEventListener('keydown', handleKeydown);

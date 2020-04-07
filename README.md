@@ -289,7 +289,7 @@ _HINT:_ the `delete` operator is a _mutative_ argument, and you can't use it dir
 
 ```js
 const state = {
-  /* immutable state obhect */
+  /* immutable state obhect */  //lmao I spent some time tinkering with this to figure this out
 };
 const stateCopy = { ...state }; // New object we CAN mutate
 delete stateCopy[someId];
